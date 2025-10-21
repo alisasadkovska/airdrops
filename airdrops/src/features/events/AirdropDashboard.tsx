@@ -8,11 +8,31 @@ import { AnimatePresence, motion } from "motion/react";
 type Props = {
     formOpen: boolean;
     setFormOpen: (isOpen: boolean) => void;
+    formToggle: (airdrop: Airdrop | null) => void;
+    selectedAirdrop: Airdrop | null;
 }
 
-export default function AirdropDashboard({ formOpen, setFormOpen }: Props) {
+export default function AirdropDashboard({ formOpen, setFormOpen, formToggle, selectedAirdrop }: Props) {
 
   const [appAirdrops, setAirdrops] = useState<Airdrop[]>([]);
+  
+
+
+  const handleCreateAirdrop = (newAirdrop: Airdrop) => {
+    setAirdrops(prevAirdrops => [...prevAirdrops, newAirdrop]);
+  }
+
+  const handleUpdateAirdrop = (updatedAirdrop: Airdrop) => {
+    setAirdrops(prevState => {
+      return prevState.map(airdrop => airdrop.id === updatedAirdrop.id ?  updatedAirdrop : airdrop);
+    })
+  }
+
+  const handleDeleteAirdrop = (airdropId: string) => {
+    setAirdrops(prevState => prevState.filter(airdrop => airdrop.id !== airdropId));
+    }
+
+
 
   useEffect(() => {
     setAirdrops(airdrops);
@@ -33,16 +53,20 @@ export default function AirdropDashboard({ formOpen, setFormOpen }: Props) {
       exit={{ opacity: 0, x: -200 }}
       transition={{duration: 0.3, ease: 'easeInOut'}}
       >
-        <div className="flex flex-col gap-4">
+     <div className="flex flex-col gap-4">
               {appAirdrops.map((airdrop) => (
-      <AirdropCard key={airdrop.id} airdrop={airdrop} />
+      <AirdropCard
+         formToggle={formToggle}
+         deleteAirdrop={handleDeleteAirdrop}
+         key={airdrop.id} 
+         airdrop={airdrop} />
     ))}
         </div>
     
       </motion.div>
     </AnimatePresence>
     </div>
-    <div className="w-2/5">
+    <div className="w-2/5 overflow-hidden">
     <AnimatePresence>
       {formOpen &&(
       <motion.div
@@ -51,7 +75,12 @@ export default function AirdropDashboard({ formOpen, setFormOpen }: Props) {
       exit={{ opacity: 0, x: 200 }}
       transition={{duration: 0.3, ease: 'easeInOut'}}
       >
-        <AirdropForm setFormOpen={setFormOpen}/>
+        <AirdropForm 
+        key = {selectedAirdrop ? selectedAirdrop.id : 'new'}
+        setFormOpen={setFormOpen}
+        createAirdrop={handleCreateAirdrop}
+        selectedAirdrop={selectedAirdrop}
+        updateAirdrop={handleUpdateAirdrop}/>
       </motion.div>
       )}
     </AnimatePresence>

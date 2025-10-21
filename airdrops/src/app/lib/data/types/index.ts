@@ -8,9 +8,10 @@ export type Airdrop = {
     title: string;
     task: string;
     reward_value_estimated_usd?: number;
-    likesCount: number;
-    usersJoined: string[];
+    likesCount?: number;
+    usersJoined?: string[];
     date_added: string; // ISO string
+    end_date?: string; // ISO string
     steps: AirdropStep[];
     description: string;    
     confirmed: boolean;

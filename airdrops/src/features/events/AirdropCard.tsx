@@ -3,9 +3,11 @@ import LikeDislike from "./LikeDislike";
 
 type Props = {
   airdrop: Airdrop;
+  formToggle: (airdrop: Airdrop) => void;
+  deleteAirdrop: (airdropId: string) => void;
 }
 
-export default function AirdropCard({airdrop}: Props) {
+export default function AirdropCard({airdrop, formToggle, deleteAirdrop}: Props) {
   return (
    <div className="card card-border bg-base-100 w-full shadow-xl">
   <div className="card-body">
@@ -19,14 +21,23 @@ export default function AirdropCard({airdrop}: Props) {
          <p className="text-sm">Aidropd task description</p>
       </div>
     </div>
-    <div className="bg-base-200 -mx-6 my-3 px-4 border-y border-neutral/20 py-2">
+    <div className="-mx-6 my-3 px-4 border-y border-neutral/20 py-2">
       <LikeDislike/>
     </div>
     <div className="card-actions flex">
       <div className="flex flex-1">
        {airdrop.description}
       </div>
-      <button className="btn btn-primary">Enroll</button>
+      <div className="flex gap-3">
+      <button onClick={() => formToggle(airdrop)} 
+      className="btn btn-primary">
+        View
+        </button>
+        <button onClick={() => deleteAirdrop(airdrop.id)} 
+      className="btn btn-error">
+        Delete
+        </button>
+      </div>
     </div>
   </div>
 </div>
