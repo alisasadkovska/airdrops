@@ -1,13 +1,15 @@
 import type { Airdrop } from "../../app/lib/data/types";
+import { useAppDispatch } from "../../app/lib/stores/store";
+import { deleteAirdrop, toogleForm } from "./airdropSlice";
 import LikeDislike from "./LikeDislike";
 
 type Props = {
   airdrop: Airdrop;
-  formToggle: (airdrop: Airdrop) => void;
-  deleteAirdrop: (airdropId: string) => void;
 }
 
-export default function AirdropCard({airdrop, formToggle, deleteAirdrop}: Props) {
+export default function AirdropCard({airdrop}: Props) {
+  const dispatch = useAppDispatch();
+
   return (
    <div className="card card-border bg-base-100 w-full shadow-xl">
   <div className="card-body">
@@ -29,11 +31,11 @@ export default function AirdropCard({airdrop, formToggle, deleteAirdrop}: Props)
        {airdrop.description}
       </div>
       <div className="flex gap-3">
-      <button onClick={() => formToggle(airdrop)} 
+      <button onClick={() => dispatch(toogleForm(airdrop))} 
       className="btn btn-primary">
         View
         </button>
-        <button onClick={() => deleteAirdrop(airdrop.id)} 
+        <button onClick={() => dispatch(deleteAirdrop(airdrop.id))} 
       className="btn btn-error">
         Delete
         </button>

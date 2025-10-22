@@ -1,10 +1,11 @@
-import type { Airdrop } from "../../lib/data/types";
+import { toogleForm } from "../../../features/events/airdropSlice";
+import { useAppDispatch } from "../../lib/stores/store";
 
-type Props = {
-    formToggle: (airdorp: Airdrop | null) => void;
-}
 
-export default function Navbar({ formToggle }: Props) {
+
+export default function Navbar() {
+const dispatch = useAppDispatch();
+
   return (
    <header className="p-3 w-full fixed top-0 z-50 bg-gradient-to-r from-primary to-black">
     <div className="flex align-middle items-center px-10 mx-auto gap-6 cursor-pointer">
@@ -14,7 +15,7 @@ export default function Navbar({ formToggle }: Props) {
         </a>
         <nav className="flex gap-3 my-2 uppercase text-lg text-white">
             <a>Airdrops</a>
-            <a onClick={() => formToggle(null)}>Create</a>
+            <a onClick={() => dispatch(toogleForm(null))}>Create</a>
         </nav>
         <div className="flex align-middle ml-auto gap-3">
             <button className="btn">Login</button>

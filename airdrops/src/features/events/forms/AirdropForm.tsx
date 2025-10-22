@@ -1,13 +1,11 @@
-import type { Airdrop } from "../../../app/lib/data/types";
+import { useAppDispatch, useAppSelector } from "../../../app/lib/stores/store";
+import { closeForm, createAirdrop, updateAirdrop } from "../airdropSlice";
 
-type Props = {
-    setFormOpen: (isOpen: boolean) => void;
-    createAirdrop: (newAirdrop: Airdrop) => void;
-    selectedAirdrop?: Airdrop | null;
-    updateAirdrop: (updatedAirdrop: Airdrop) => void;
-}
 
-export default function AirdropForm({ setFormOpen, createAirdrop, selectedAirdrop, updateAirdrop }: Props) {
+
+export default function AirdropForm() {
+  const dispatch = useAppDispatch();
+  const selectedAirdrop = useAppSelector(state => state.airdrop.selectedAirdrop);
 
   const initialValues = selectedAirdrop ?? {
     title: '',
@@ -21,13 +19,13 @@ export default function AirdropForm({ setFormOpen, createAirdrop, selectedAirdro
     const data = Object.fromEntries(formData.entries());
 
     if (selectedAirdrop) {
-      updateAirdrop({
-        ...selectedAirdrop, ...data});
-      setFormOpen(false);
+      dispatch(updateAirdrop({
+        ...selectedAirdrop, ...data}));
+      dispatch(closeForm());
       return;
     }else {
 
-    createAirdrop({
+    dispatch(createAirdrop({
       ...data,
       id: crypto.randomUUID(),
       title: data.title as string,
@@ -42,8 +40,8 @@ export default function AirdropForm({ setFormOpen, createAirdrop, selectedAirdro
       requirements: [],
       tags: [],
       refLink: ""
-    });
-      setFormOpen(false);
+    }));
+       dispatch(closeForm());
   }
   }
 
@@ -66,7 +64,7 @@ export default function AirdropForm({ setFormOpen, createAirdrop, selectedAirdro
                placeholder="Date">
             </input>
             <div className="flex justify-end w-full gap-3">
-                <button onClick={() => setFormOpen(false)} type="button" className="btn btn-neutral">Cancel</button>
+                <button onClick={() => dispatch(closeForm())} type="button" className="btn btn-neutral">Cancel</button>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </div>
         </form>
