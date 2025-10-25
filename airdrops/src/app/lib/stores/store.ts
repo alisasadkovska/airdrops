@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 import { counterSlice } from '../../../features/counter/cunterSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { airtropSlice } from '../../../features/events/airdropSlice'
+import { accountSlice } from '../../../features/account/accountSlice'
 
 export const store = configureStore({
   reducer: {
     counter: counterSlice.reducer,
     airdrop: airtropSlice.reducer,
+    account: accountSlice.reducer
   },
 })
 

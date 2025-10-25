@@ -74,3 +74,8 @@
   --depth: 1;
   --noise: 0;
 }
+
+
+a.active{
+  @apply text-blue-400 font-bold;
+}

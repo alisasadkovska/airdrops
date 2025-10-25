@@ -1,6 +1,5 @@
+import { Link } from "react-router";
 import type { Airdrop } from "../../app/lib/data/types";
-import { useAppDispatch } from "../../app/lib/stores/store";
-import { deleteAirdrop, toogleForm } from "./airdropSlice";
 import LikeDislike from "./LikeDislike";
 
 type Props = {
@@ -8,7 +7,7 @@ type Props = {
 }
 
 export default function AirdropCard({airdrop}: Props) {
-  const dispatch = useAppDispatch();
+
 
   return (
    <div className="card card-border bg-base-100 w-full shadow-xl">
@@ -31,14 +30,9 @@ export default function AirdropCard({airdrop}: Props) {
        {airdrop.description}
       </div>
       <div className="flex gap-3">
-      <button onClick={() => dispatch(toogleForm(airdrop))} 
-      className="btn btn-primary">
+      <Link to={`/airdrops/${airdrop.id}`} className="btn btn-primary">
         View
-        </button>
-        <button onClick={() => dispatch(deleteAirdrop(airdrop.id))} 
-      className="btn btn-error">
-        Delete
-        </button>
+        </Link>
       </div>
     </div>
   </div>

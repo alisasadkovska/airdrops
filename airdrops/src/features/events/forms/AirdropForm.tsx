@@ -1,11 +1,15 @@
+import { useNavigate, useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../app/lib/stores/store";
-import { closeForm, createAirdrop, updateAirdrop } from "../airdropSlice";
-
+import {  createAirdrop, selectAirdrop, updateAirdrop } from "../airdropSlice";
+import { useEffect, useRef } from "react";
 
 
 export default function AirdropForm() {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const selectedAirdrop = useAppSelector(state => state.airdrop.selectedAirdrop);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const initialValues = selectedAirdrop ?? {
     title: '',
@@ -15,19 +19,28 @@ export default function AirdropForm() {
     end_date: ''
   }
 
+  useEffect(() => {
+    if(id) {
+      dispatch(selectAirdrop(id));
+    }else {
+      dispatch(selectAirdrop(null));
+      formRef.current?.reset();
+    }
+  }, [dispatch, id]);
+
   const onSubmit = (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
 
     if (selectedAirdrop) {
       dispatch(updateAirdrop({
         ...selectedAirdrop, ...data}));
-      dispatch(closeForm());
+        navigate(`/airdrops/${selectedAirdrop.id}`);
       return;
     }else {
-
+    const id = crypto.randomUUID();
     dispatch(createAirdrop({
       ...data,
-      id: crypto.randomUUID(),
+      id,
       title: data.title as string,
       task: data.task as string,
       description: data.description as string,
@@ -41,7 +54,7 @@ export default function AirdropForm() {
       tags: [],
       refLink: ""
     }));
-       dispatch(closeForm());
+    navigate(`/airdrops/${id}`);
   }
   }
 
@@ -64,7 +77,7 @@ export default function AirdropForm() {
                placeholder="Date">
             </input>
             <div className="flex justify-end w-full gap-3">
-                <button onClick={() => dispatch(closeForm())} type="button" className="btn btn-neutral">Cancel</button>
+                <button onClick={()=>navigate(-1)} type="button" className="btn btn-neutral">Cancel</button>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </div>
         </form>
